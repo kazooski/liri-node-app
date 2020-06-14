@@ -86,5 +86,35 @@ function searchSong(userInput) {
 };
 
 // search movie
+function searchMovie(userInput) {
+
+    if (!userInput) {
+        console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
+        console.log("It's on Netflix!");
+    }
+
+    let movieQueryURL = "http://www.omdbapi.com/?t="+ userInput +"&apikey=trilogy";
+
+    axios.get(movieQueryURL)
+    .then(function(response) {
+        //   console.log(response)
+          console.log("Movie Title: " + response.data.Title);
+          console.log("Year released: " + response.data.Year);
+          console.log("IMBD rating: " + response.data.imbdRating);
+        //   console.log("Rotten Tomatoes rating: " + response.data.Ratings);
+          console.log("Country produced: " + response.data.Country);
+          console.log("Language: " + response.data.Language);
+          console.log("Plot: " + response.data.Plot);
+          console.log("Actors: " + response.data.Actors);
+    })
+
+    .catch(function(err) {
+        console.log(err);
+    });
+};
+
+// search Random by reading the random.txt file
+
+
 
 liriChoice(selectedApp, userInput);
