@@ -56,8 +56,11 @@ function searchConcert(userInput) {
         "\n in " + response.data[0].venue.city +
         // "\n on " + response.data[0].datetime (2020-09-19T13:00:00)
         "\n on " + response.data[0].datetime);
-      }
-    );
+      })
+      .catch(function(err) {
+        console.log(err);
+    });
+
 };
 
 // search song choice via Spotify
@@ -91,6 +94,7 @@ function searchMovie(userInput) {
     if (!userInput) {
         console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
         console.log("It's on Netflix!");
+        userInput = "Mr. Nobody";
     }
 
     let movieQueryURL = "http://www.omdbapi.com/?t="+ userInput +"&apikey=trilogy";
