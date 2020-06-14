@@ -51,7 +51,7 @@ function searchConcert(userInput) {
     axios.get(concertQueryURL).then(
       function(response) {
         // console.log(response)
-        console.log("𝄞 " + userInput + " 𝄞" +
+        console.log("\n𝄞 " + userInput + " 𝄞" +
         "\n will perform at " + response.data[0].venue.name +
         "\n in " + response.data[0].venue.city +
         // "\n on " + response.data[0].datetime (2020-09-19T13:00:00)
@@ -65,16 +65,26 @@ function searchSong(userInput) {
 
     var spotify = new Spotify(keys.spotify);
 
+    if (!userInput) {
+        userInput = "The Sign";
+    };
     // from https://www.npmjs.com/package/node-spotify-api
-    spotify.search({ type: 'track', query: userInput }, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
-        }
-       
-    //   console.log(data);
+    //search is the EASIEST way to find an artist, album, or track.
+    spotify
+    .search({ type: 'track', query: userInput })
+    .then(function(response) {
+        // console.log(response);
+        // console.log(userInput);
+        console.log("\nArtist(s): " + response.tracks.items[0].album.artists[0].name);
+        console.log("\nSong name: "+ response.tracks.items[0].name);
+        console.log("\nPreview link: "+ response.tracks.items[0].href);
+        console.log("\nFrom the album: "+ response.tracks.items[0].album.name);
+    })
+    .catch(function(err) {
+        console.log(err);
     });
-
-
 };
+
+// search movie
 
 liriChoice(selectedApp, userInput);
