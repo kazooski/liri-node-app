@@ -2,12 +2,14 @@
 require("dotenv").config();
 // import the keys.js file 
 var keys = require("./keys.js");
-// accesses Spotify keys
-var spotify = new Spotify(keys.spotify);
+// for npm install
+var Spotify = require('node-spotify-api');
 // constants for axios
 const axios = require("axios"); 
 // fs is a core Node package for reading and writing files
-var fs = require("fs");
+const fs = require("fs");
+// moment for date configurations
+const moment = require("moment");
 
 var selectedApp = process.argv[2];
 //slice returns all indices from #3 to the end of the array
@@ -19,6 +21,7 @@ function liriChoice (selectedApp, userInput) {
     switch (selectedApp) {
         case "concert-this":
             searchConcert(userInput);
+            console.log(userInput);
            break;
         case "spotify-this-song": 
             searchSong(userInput);
@@ -30,15 +33,48 @@ function liriChoice (selectedApp, userInput) {
             searchRandom(userInput);
             break;
         default:
-            console.log("Not a valid argument. Please try again:/n concert-this /n spotify-this-song /n movie-this /n do-what-it-says");
+            console.log("Not a valid argument. Please try again:" + 
+            "\n concert-this <artist/band name here>" +
+            "\n spotify-this-song <song name here>" +
+            "\n movie-this <movie name here>" +
+            "\n do-what-it-says");
             
     };
 };
 
 // search concert choice via BandsInTown
-axios.get("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=trilogy").then(
-  function(response) {
-    // Then we print out the imdbRating
-    console.log("The movie's rating is: " + response.data.imdbRating);
-  }
-);
+function searchConcert(userInput) {
+    // search the Bands in Town Artist Events API
+    // console.log(userInput);
+    let concertQueryURL = "https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp";
+    // console.log(concertQueryURL);
+    axios.get(concertQueryURL).then(
+      function(response) {
+        // console.log(response)
+        console.log("𝄞 " + userInput + " 𝄞" +
+        "\n will perform at " + response.data[0].venue.name +
+        "\n in " + response.data[0].venue.city +
+        // "\n on " + response.data[0].datetime (2020-09-19T13:00:00)
+        "\n on " + response.data[0].datetime);
+      }
+    );
+};
+
+// search song choice via Spotify
+function searchSong(userInput) {
+
+    var spotify = new Spotify(keys.spotify);
+
+    // from https://www.npmjs.com/package/node-spotify-api
+    spotify.search({ type: 'track', query: userInput }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+       
+    //   console.log(data);
+    });
+
+
+};
+
+liriChoice(selectedApp, userInput);
